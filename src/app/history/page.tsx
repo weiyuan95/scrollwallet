@@ -1,14 +1,15 @@
 'use client';
+
 import { Box, Container, LoadingOverlay, Paper } from '@mantine/core';
 import { useMetamaskWallet } from '@/app/MetamaskWalletProvider';
 import { ConnectToMetamask } from '@/app/ConnectToMetamask';
-import { WalletBalance } from '@/app/WalletBalance';
+import { TransactionsTable } from '@/app/history/TransactionsTable';
 
-export default function Home() {
+export default function Page() {
   const wallet = useMetamaskWallet();
 
   return (
-    <Container size="xs" pt="xl">
+    <Container size="sm" pt="xl">
       <Paper radius="md" p="xl" mt="md" mb="md" withBorder>
         <Box pos="relative">
           <LoadingOverlay
@@ -17,8 +18,7 @@ export default function Home() {
             overlayProps={{ blur: 1 }}
             loaderProps={{ type: 'dots' }}
           />
-
-          {!wallet.isConnected ? <ConnectToMetamask /> : <WalletBalance />}
+          {!wallet.isConnected ? <ConnectToMetamask /> : <TransactionsTable />}
         </Box>
       </Paper>
     </Container>
