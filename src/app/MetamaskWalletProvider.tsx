@@ -1,5 +1,5 @@
 'use client';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { BrowserProvider, Signer } from 'ethers';
 import { notifications } from '@mantine/notifications';
 
@@ -19,7 +19,7 @@ const MetamaskWalletContext = createContext<WalletContextI | undefined>(undefine
 
 export function MetamaskWalletProvider({ children }: { children: ReactNode }): ReactNode {
   const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isErrored, setIsErrored] = useState(false);
   const [provider, setProvider] = useState<BrowserProvider | undefined>();
   const [signer, setSigner] = useState<Signer | undefined>();
@@ -30,18 +30,22 @@ export function MetamaskWalletProvider({ children }: { children: ReactNode }): R
 
   const onMount = async () => {
     setIsLoading(true);
-    // Check if there are connected accounts
-    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
 
-    // Assumption that only 1 account is used in the app
-    if (accounts.length > 0) {
-      await connectToMetamask();
+    if (typeof window !== 'undefined') {
+      // Check if there are connected accounts
+      // @ts-expect-error "Assumes metamask is installed"
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+
+      // Assumption that only 1 account is used in the app
+      if (accounts.length > 0) {
+        await connectToMetamask();
+      }
+      // We only set this to false when the window has already loaded and the account has been checked
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
-  useState(() => {
+  useEffect(() => {
     void onMount();
   }, []);
 
@@ -50,6 +54,7 @@ export function MetamaskWalletProvider({ children }: { children: ReactNode }): R
     try {
       await switchToScrollSepolia();
       // Hardcode the chainId - we only interact with Scroll Sepolia for this exercise
+      // @ts-expect-error "Assumes metamask is installed"
       const provider = new BrowserProvider(window.ethereum, 534351);
       // Prompt user to switch to the Scroll Sepolia network
       const signer = await provider.getSigner();
@@ -76,6 +81,7 @@ export function MetamaskWalletProvider({ children }: { children: ReactNode }): R
   const disconnectFromMetamask = async () => {
     setIsLoading(true);
     try {
+      // @ts-expect-error "Assumes metamask is installed"
       await window.ethereum.request({
         method: 'wallet_revokePermissions',
         params: [
@@ -131,12 +137,14 @@ export function useMetamaskWallet(): WalletContextI {
 async function switchToScrollSepolia(): Promise<void> {
   try {
     // Prompt user to switch to the Scroll Sepolia network
+    // @ts-expect-error "Assumes metamask is installed"
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: '0x8274f' }], // chainId must be in hexadecimal numbers
     });
   } catch {
     // If the use has not added the Scroll Sepolia network, add it
+    // @ts-expect-error "Assumes metamask is installed"
     await window.ethereum.request({
       method: 'wallet_addEthereumChain',
       params: [

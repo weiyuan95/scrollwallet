@@ -62,6 +62,15 @@ export function TransactionForm() {
               to: address,
               value: ethers.parseUnits(amount, 'ether'),
             });
+            await fetch(`/api/transactions/`, {
+              method: 'POST',
+              body: JSON.stringify({
+                fromAddress: await signer.getAddress(),
+                toAddress: address,
+                timestamp: Date.now().toString(),
+                amount: ethers.formatUnits(ethers.parseUnits(amount, 'ether'), 'wei'),
+              }),
+            });
 
             notifications.show({
               title: 'Success',
@@ -74,6 +83,8 @@ export function TransactionForm() {
               message: 'Unexpected error in sending transaction. You can refresh the page to update your balance.',
               color: 'red',
             });
+          } finally {
+            form.reset();
           }
         })}
       >

@@ -39,6 +39,14 @@ export default function AppShell({ children }: Readonly<{ children: ReactNode }>
               >
                 Send
               </UnstyledButton>
+              <UnstyledButton
+                className={classes.control}
+                onClick={() => {
+                  router.push('/history');
+                }}
+              >
+                History
+              </UnstyledButton>
               <WalletHeaderButton />
             </Group>
           </Group>
@@ -61,6 +69,14 @@ export default function AppShell({ children }: Readonly<{ children: ReactNode }>
           }}
         >
           Send
+        </UnstyledButton>
+        <UnstyledButton
+          className={classes.control}
+          onClick={() => {
+            router.push('/history');
+          }}
+        >
+          History
         </UnstyledButton>
         <WalletHeaderButton />
       </MantineAppShell.Navbar>

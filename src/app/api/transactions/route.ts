@@ -1,4 +1,4 @@
-import { Transaction, TRANSACTION_HISTORY } from '@/app/api/transactions/[fromAddress]/route';
+import { Transaction, TRANSACTION_HISTORY } from '@/app/api/transactions/[fromAddress]/history';
 
 export interface AddTransaction {
   fromAddress: string;
