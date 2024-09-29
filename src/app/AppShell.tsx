@@ -58,6 +58,7 @@ export default function AppShell({ children }: Readonly<{ children: ReactNode }>
           className={classes.control}
           onClick={() => {
             router.push('/');
+            toggle();
           }}
         >
           Balance
@@ -66,6 +67,7 @@ export default function AppShell({ children }: Readonly<{ children: ReactNode }>
           className={classes.control}
           onClick={() => {
             router.push('/send');
+            toggle();
           }}
         >
           Send
@@ -74,6 +76,7 @@ export default function AppShell({ children }: Readonly<{ children: ReactNode }>
           className={classes.control}
           onClick={() => {
             router.push('/history');
+            toggle();
           }}
         >
           History
